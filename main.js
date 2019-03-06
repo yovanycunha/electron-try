@@ -1,10 +1,8 @@
 const electron = require('electron');
-const url = require('url');
-const path = require('path');
+const window = require('./window');
 
 const {
     app,
-    BrowserWindow,
     Menu,
     ipcMain,
 } = electron;
@@ -16,16 +14,7 @@ let addWindow;
 
 // Esperando app estar pronto
 app.on('ready', () => {
-    //Criando Window
-    mainWindow = new BrowserWindow({});
-
-    //Renderizando HTML 
-    mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'mainWindow.html'),
-        protocol: 'file:',
-        slashes: true,
-    }));
-    
+    mainWindow = window('', false, 'mainWindow.html');
     //Sai do app quando fechar
     mainWindow.on('closed', ()=> {
         app.quit();
@@ -40,19 +29,8 @@ app.on('ready', () => {
 
 //Lidando com Adicionar Item
 function createAddWindow() {
-    //Criando Window
-    addWindow = new BrowserWindow({
-        width: 300,
-        height: 200,
-        title: 'Adicionando itens à lista de compras',
-    });
 
-    //Renderizando HTML 
-    addWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'addWindow.html'),
-        protocol: 'file:',
-        slashes: true,
-    }));
+    addWindow = window('Adicionando itens a lista de compras', true, 'addWindow.html');
 
     //Garbage Colletion 
     addWindow.on('close', ()=> {
